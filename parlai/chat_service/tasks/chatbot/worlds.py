@@ -31,6 +31,7 @@ class MessengerBotChatTaskWorld(World):
     """
 
     MAX_AGENTS = 1
+    MODEL_KEY = 'legacy_seq2seq'
     MODEL_KEY = 'blender_90M'
 
     def __init__(self, opt, agent, bot):
@@ -61,8 +62,8 @@ class MessengerBotChatTaskWorld(World):
                 {
                     'id': 'World',
                     'text': 'Welcome to the ParlAI Chatbot demo. '
-                    'You are now paired with a bot - feel free to send a message.'
-                    'Type [DONE] to finish the chat.',
+                            'You are now paired with a bot - feel free to send a message.'
+                            'Type [DONE] to finish the chat.',
                 }
             )
             self.first_time = False
@@ -79,6 +80,12 @@ class MessengerBotChatTaskWorld(World):
                 print("===response====")
                 print(response)
                 print("~~~~~~~~~~~")
+
+                if self.MODEL_KEY == 'legacy_seq2seq':
+                    response['id'] = ''
+                elif self.MODEL_KEY == 'blender_90M':
+                    response.force_set('id', '')
+
                 self.agent.observe(response)
 
     def episode_done(self):
@@ -118,7 +125,7 @@ class MessengerOverworld(World):
                 {
                     'id': 'Overworld',
                     'text': 'Welcome to the overworld for the ParlAI messenger '
-                    'chatbot demo. Please type "begin" to start.',
+                            'chatbot demo. Please type "begin" to start.',
                     'quick_replies': ['begin'],
                 }
             )
